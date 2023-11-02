@@ -75,5 +75,5 @@ contract UniswapV2PairTest is Test {
         assertEq(pair.totalSupply(), 1000);
         assertEq(token0.balanceOf(address(this)), 10 ether - 1500);
         assertEq(token1.balanceOf(address(this)), 10 ether - 1000);
-    }
+    }   
 }

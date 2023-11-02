@@ -16,6 +16,7 @@ error InsufficientOutputAmount();
 error InsufficientLiquidity();
 error InvalidK();
 error BalanceOverflow();
+error AlreadyInitialized();
 
 contract UniswapV2Pair is ERC20, Math {
     using UQ112x112 for uint224;
@@ -43,6 +44,15 @@ contract UniswapV2Pair is ERC20, Math {
     constructor(address _token0, address _token1) ERC20("ZuniswapV2 Pair", "ZUNIV2", 18) {
         token0 = _token0;
         token1 = _token1;
+    }
+
+
+    function initialize(address token0_, address token1_) public {
+        if (token0 != address(0) || token1 != address(0))
+            revert AlreadyInitialized();
+
+        token0 = token0_;
+        token1 = token1_;
     }
 
     function mint() public {
