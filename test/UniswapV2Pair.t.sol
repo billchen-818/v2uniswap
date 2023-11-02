@@ -45,4 +45,35 @@ contract UniswapV2PairTest is Test {
         assertEq(pair.totalSupply(), 3 ether);
     }
 
+    function testBurn() public {
+        token0.transfer(address(pair), 1 ether);
+        token1.transfer(address(pair), 1 ether);
+
+        pair.mint();
+        pair.burn();
+
+        assertEq(pair.balanceOf(address(this)), 0);
+        assertEq(pair.totalSupply(), 1000);
+        assertEq(token0.balanceOf(address(this)), 10 ether - 1000);
+        assertEq(token1.balanceOf(address(this)), 10 ether - 1000);
+    }
+
+    function testBurnUnbalanced() public {
+        token0.transfer(address(pair), 1 ether);
+        token1.transfer(address(pair), 1 ether);
+        
+        pair.mint();
+
+        token0.transfer(address(pair), 2 ether);
+        token1.transfer(address(pair), 1 ether);
+        
+        pair.mint();
+
+        pair.burn();
+
+        assertEq(pair.balanceOf(address(this)), 0);
+        assertEq(pair.totalSupply(), 1000);
+        assertEq(token0.balanceOf(address(this)), 10 ether - 1500);
+        assertEq(token1.balanceOf(address(this)), 10 ether - 1000);
+    }
 }
